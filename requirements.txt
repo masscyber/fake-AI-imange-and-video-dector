@@ -1,0 +1,8 @@
+flask
+opencv-python-headless
+pillow
+werkzeug
+numpy
+# Optional: torch torchvision (install if you want to run the toy model)
+# torch
+# torchvision

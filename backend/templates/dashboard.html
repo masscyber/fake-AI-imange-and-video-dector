@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Dashboard - Deepfake Detector</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">Deepfake Detector</div>
+    <a href="/logout" class="logout-btn">Logout</a>
+  </nav>
+
+  <main class="container">
+    <section class="upload-card">
+      <h2>Upload Image or Video</h2>
+      <p>Analyze your media for potential deepfakes.</p>
+      <input id="fileInput" type="file" accept="image/*,video/*">
+      <button id="uploadBtn">Upload & Analyze</button>
+    </section>
+
+    <section id="result" class="result-card hidden">
+      <h3>Analysis Result</h3>
+      <pre id="resultData"></pre>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 Deepfake Detector | Built with Flask & ❤️</p>
+  </footer>
+
+  <script>
+    const uploadBtn = document.getElementById('uploadBtn');
+    const fileInput = document.getElementById('fileInput');
+    const resultSection = document.getElementById('result');
+    const resultData = document.getElementById('resultData');
+
+    uploadBtn.addEventListener('click', async () => {
+      if (!fileInput.files.length) return alert('Please select a file.');
+
+      uploadBtn.disabled = true;
+      uploadBtn.innerText = 'Analyzing...';
+
+      const form = new FormData();
+      form.append('file', fileInput.files[0]);
+
+      try {
+        const res = await fetch('/api/upload', { method: 'POST', body: form });
+        const data = await res.json();
+
+        resultSection.classList.remove('hidden');
+        resultData.textContent = JSON.stringify(data, null, 2);
+
+      } catch (err) {
+        alert('Error analyzing file. Please try again.');
+      } finally {
+        uploadBtn.disabled = false;
+        uploadBtn.innerText = 'Upload & Analyze';
+      }
+    });
+  </script>
+</body>
+</html>
